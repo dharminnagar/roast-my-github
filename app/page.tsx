@@ -92,7 +92,7 @@ export default function Home() {
         }
     };
 
-    const handleFeedBack = () => {
+    async function handleFeedBack() {
         if (!feedback) {
             toast.error("Feedback cannot be empty");
             return;
@@ -101,10 +101,29 @@ export default function Home() {
         console.log("Feedback:", feedback);
 
         // Call the API to submit the feedback
+        try {
+            const feedbackResponse = await fetch("/feedback", {
+                method: "POST",
+                body: JSON.stringify({
+                    feedback,
+                }),
+            });
 
-        toast.success("Feedback Submitted Successfully");
-        setFeedback("");
-    };
+            if (feedbackResponse.status !== 200) {
+                const feedbackResponseText = await feedbackResponse.text();
+                console.error("Error submitting feedback:", feedbackResponseText);
+                toast.error("Error submitting feedback");
+                return;
+            }
+
+            toast.success("Feedback Submitted Successfully");
+            setFeedback("");
+        } catch (e: any) {
+            console.error("Error submitting feedback:", e);
+            toast.error("Error submitting feedback");
+            return;
+        }
+    }
 
     return (
         <>
