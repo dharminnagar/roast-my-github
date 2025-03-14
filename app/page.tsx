@@ -71,13 +71,11 @@ export default function Home() {
             const parsedRoast = JSON.parse(roast);
 
             // Split the text by newlines and render each line
-            return parsedRoast
-                .split("\n")
-                .map((line: string, index: number) => (
-                    <p key={index} className="mb-2">
-                        {line}
-                    </p>
-                ));
+            return parsedRoast.split("\n").map((line: string, index: number) => (
+                <p key={index} className="mb-2">
+                    {line}
+                </p>
+            ));
         } catch (e) {
             console.error("Error parsing JSON:", e);
             return roast; // Fallback to the original text
@@ -103,8 +101,7 @@ export default function Home() {
 
                 <div className="h-[92vh] pt-5">
                     <div className="flex justify-center text-lg">
-                        Get a Roast of your GitHub profile based on your
-                        activity and contributions
+                        Get a Roast of your GitHub profile based on your activity and contributions
                     </div>
                     <div className="flex flex-col items-center justify-center gap-4 mt-5">
                         <Input
@@ -113,7 +110,6 @@ export default function Home() {
                             className="w-96"
                             onChange={(e) => setUsername(e.target.value)}
                         />
-
                         <div className="options flex gap-4">
                             <Select onValueChange={setRoastIntensity}>
                                 <SelectTrigger className="w-[180px]">
@@ -121,18 +117,10 @@ export default function Home() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectGroup>
-                                        <SelectLabel>
-                                            Roast Intensity
-                                        </SelectLabel>
-                                        <SelectItem value="Mild">
-                                            Mild
-                                        </SelectItem>
-                                        <SelectItem value="Medium">
-                                            Medium
-                                        </SelectItem>
-                                        <SelectItem value="Extreme">
-                                            Extreme
-                                        </SelectItem>
+                                        <SelectLabel>Roast Intensity</SelectLabel>
+                                        <SelectItem value="mild">Mild</SelectItem>
+                                        <SelectItem value="medium">Medium</SelectItem>
+                                        <SelectItem value="extreme">Extreme</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
@@ -144,24 +132,15 @@ export default function Home() {
                                 <SelectContent>
                                     <SelectGroup>
                                         <SelectLabel>Roast Length</SelectLabel>
-                                        <SelectItem value="Short">
-                                            Short
-                                        </SelectItem>
-                                        <SelectItem value="Medium">
-                                            Medium
-                                        </SelectItem>
-                                        <SelectItem value="Large">
-                                            Large
-                                        </SelectItem>
+                                        <SelectItem value="1">Short</SelectItem>
+                                        <SelectItem value="2">Medium</SelectItem>
+                                        <SelectItem value="3">Large</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
                         </div>
-
                         <Button className="w-32" onClick={handleRoast}>
-                            {loading && (
-                                <LoaderCircle className="animate-spin" />
-                            )}
+                            {loading && <LoaderCircle className="animate-spin" />}
                             {loading && <div>Roasting...</div>}
                             {!loading && "Roast Me"}
                         </Button>
@@ -175,7 +154,6 @@ export default function Home() {
                                 {renderRoast()}
                             </div>
                         )}
-
                         {loading && (
                             <div className="flex items-center space-x-4 w-[80vw] p-3 rounded-md bg-neutral-800 bg-opacity-10">
                                 <div className="space-y-2">

@@ -6,10 +6,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { prompts, roastLevelTypes } from "./prompts";
 
-async function handler(
-    req: Request,
-    { params }: { params: Promise<{ username: string }> }
-) {
+async function handler(req: Request, { params }: { params: Promise<{ username: string }> }) {
     const apiKey = process.env.GENAI_API_KEY;
     if (!apiKey) {
         return new Response(JSON.stringify({ error: "API Key not found" }));
@@ -19,21 +16,19 @@ async function handler(
 
     const { username } = await params;
     const { userDetails, roastLength, level = "mild" } = await req.json();
-    const roastLevel = (["mild", "medium", "extreme"] as const).includes(
-        level as roastLevelTypes
-    )
+    const roastLevel = (["mild", "medium", "extreme"] as const).includes(level as roastLevelTypes)
         ? (level as "mild" | "medium" | "extreme")
         : "mild";
 
     if (!userDetails) {
-        return new Response(
-            JSON.stringify({ error: "User Details not found" })
-        );
+        return new Response(JSON.stringify({ error: "User Details not found" }));
     }
 
     const GITHUB_PROFILE_JSON = JSON.stringify(userDetails, null, 4);
 
     const prompt = prompts(roastLevel, GITHUB_PROFILE_JSON, roastLength);
+
+    console.log("Prompt:", prompt);
 
     const modelRequest = await model.generateContent(prompt);
     const modelResponse = await modelRequest.response.text();
