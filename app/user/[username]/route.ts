@@ -12,6 +12,7 @@ async function handler(
     userDetails.contributions = await fetchTotalContributions(token, username);
     userDetails.readme = await fetchUserREADME(token, username);
     userDetails.repos = await fetchGitHubRepos(token, username);
+    userDetails.mostUsedLanguage = getMostUsedLanguage(userDetails.repos);
 
     return new Response(JSON.stringify(userDetails), {
         headers: {
@@ -128,6 +129,20 @@ async function fetchGitHubRepos(token: string | undefined, username: string) {
 
     const repos = await ghResponse.json();
     return repos;
+}
+
+export function getMostUsedLanguage(repos: any[]): string {
+    const languageCounts: { [key: string]: number } = {};
+    repos.forEach((repo: any) => {
+        const language = repo.language;
+        if (language) {
+            languageCounts[language] = (languageCounts[language] || 0) + 1;
+        }
+    });
+    return Object.keys(languageCounts).reduce(
+        (a, b) => (languageCounts[a] > languageCounts[b] ? a : b),
+        Object.keys(languageCounts)[0]
+    );
 }
 
 export { handler as GET };
