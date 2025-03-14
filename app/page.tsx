@@ -11,10 +11,16 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Github, LoaderCircle } from "lucide-react";
+import { Github, LoaderCircle, Moon, Sun } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import ReactMarkdown from "react-markdown";
+import { useTheme } from "next-themes";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export default function Home() {
     const [roast, setRoast] = useState("");
@@ -22,26 +28,21 @@ export default function Home() {
     const [username, setUsername] = useState("");
     const [roastLength, setRoastLength] = useState("Large");
     const [roastIntensity, setRoastIntensity] = useState("Mild");
+    const { setTheme } = useTheme();
 
     async function handleRoast() {
         if (!username) {
-            toast("Input Error", {
-                description: "Username cannot be empty",
-            });
+            toast.error("Username cannot be empty");
             return;
         }
 
         if (!roastLength) {
-            toast("Input Error", {
-                description: "Please select Roast Length",
-            });
+            toast.error("Please select Roast Length");
             return;
         }
 
         if (!roastIntensity) {
-            toast("Input Error", {
-                description: "Please select Roast Intensity",
-            });
+            toast.error("Please select Roast Intensity");
             return;
         }
 
@@ -63,9 +64,7 @@ export default function Home() {
         const userRoastText = await roastTextFromResponse.text();
 
         if (!userRoastText) {
-            toast("Error", {
-                description: "No such User Found",
-            });
+            toast.error("No such User Found");
             setLoading(false);
             return;
         }
@@ -103,6 +102,28 @@ export default function Home() {
                         >
                             <Github />
                         </a>
+
+                        {/* Dropdown Menu for Theme */}
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon">
+                                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                                    <span className="sr-only">Toggle theme</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => setTheme("light")}>
+                                    Light
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("dark")}>
+                                    Dark
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => setTheme("system")}>
+                                    System
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         <Button onClick={handleFeedBack}>FeedBack</Button>
                     </div>
                 </div>
@@ -118,6 +139,8 @@ export default function Home() {
                             className="w-96"
                             onChange={(e) => setUsername(e.target.value)}
                         />
+
+                        {/* Roast Options Dropdown */}
                         <div className="options flex gap-4">
                             <Select onValueChange={setRoastIntensity}>
                                 <SelectTrigger className="w-[180px]">
@@ -154,20 +177,18 @@ export default function Home() {
                         </Button>
                     </div>
 
-                    {/* TODO: Will have to render Markdown here */}
                     <div className="roast pt-5 flex justify-center">
                         {roast && (
-                            <div className="w-[80vw] bg-neutral-700 p-3 rounded-md">
-                                {/* {`${JSON.parse(roast)}`} */}
+                            <div className="w-[80vw] bg-neutral-100 dark:bg-neutral-700 p-3 rounded-md">
                                 {renderRoast()}
                             </div>
                         )}
                         {loading && (
-                            <div className="flex items-center space-x-4 w-[80vw] p-3 rounded-md bg-neutral-800 bg-opacity-10">
+                            <div className="flex items-center space-x-4 w-[80vw] p-3 rounded-md bg-neutral-100 dark:bg-neutral-800 bg-opacity-10">
                                 <div className="space-y-2">
-                                    <Skeleton className="h-4 w-[75vw] bg-neutral-700" />
-                                    <Skeleton className="h-4 w-[70vw] bg-neutral-700" />
-                                    <Skeleton className="h-4 w-[60vw] bg-neutral-700" />
+                                    <Skeleton className="h-4 w-[75vw] bg-neutral-400 dark:bg-neutral-700" />
+                                    <Skeleton className="h-4 w-[70vw] bg-neutral-400 dark:bg-neutral-700" />
+                                    <Skeleton className="h-4 w-[60vw] bg-neutral-400 dark:bg-neutral-700" />
                                 </div>
                             </div>
                         )}
