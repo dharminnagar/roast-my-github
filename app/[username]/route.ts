@@ -6,7 +6,7 @@
  */
 async function handler(
     req: Request,
-    { params }: { params: { username: string } }
+    { params }: { params: Promise<{ username: string }> }
 ) {
     const SERVER_URL = process.env.SERVER_URL;
     if (!SERVER_URL) {

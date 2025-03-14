@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 
 async function handler(
     req: NextRequest,
-    { params }: { params: { username: string } }
+    { params }: { params: Promise<{ username: string }> }
 ) {
     const token = process.env.GITHUB_TOKEN;
     const { username } = await params;
@@ -130,7 +130,7 @@ async function fetchGitHubRepos(token: string | undefined, username: string) {
     return repos;
 }
 
-export function getMostUsedLanguage(repos: any[]): string {
+function getMostUsedLanguage(repos: any[]): string {
     const languageCounts: { [key: string]: number } = {};
     repos.forEach((repo: any) => {
         const language = repo.language;

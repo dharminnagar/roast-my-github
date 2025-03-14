@@ -8,7 +8,7 @@ import { prompts, roastLevelTypes } from "./prompts";
 
 async function handler(
     req: Request,
-    { params }: { params: { username: string } }
+    { params }: { params: Promise<{ username: string }> }
 ) {
     const apiKey = process.env.GENAI_API_KEY;
     if (!apiKey) {
