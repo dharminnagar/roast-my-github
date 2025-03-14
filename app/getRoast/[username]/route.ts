@@ -19,7 +19,6 @@ async function handler(
 
     const { username } = await params;
     const { userDetails, roastLength, level = "mild" } = await req.json();
-    console.log("level:", level);
     const roastLevel = (["mild", "medium", "extreme"] as const).includes(
         level as roastLevelTypes
     )

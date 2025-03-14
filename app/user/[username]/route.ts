@@ -6,7 +6,6 @@ async function handler(
 ) {
     const token = process.env.GITHUB_TOKEN;
     const { username } = await params;
-    console.log(username);
 
     const userDetails = await fetchUserDetails(token, username);
     userDetails.contributions = await fetchTotalContributions(token, username);
