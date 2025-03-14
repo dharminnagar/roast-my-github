@@ -25,7 +25,8 @@ model User {
 }
 
 model Feedback {
-  id       String @id @default(cuid())
+  id       String  @id @default(cuid())
+  username String?
   feedback String
 }
 

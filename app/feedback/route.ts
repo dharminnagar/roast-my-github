@@ -1,26 +1,24 @@
-import { client } from "@/lib/prisma";
+import { client } from "../../lib/prisma";
 
 async function handler(req: Request, res: Response) {
-    const { feedback } = await req.json();
-
-    if (!feedback) {
-        return new Response(JSON.stringify({ error: "Feedback not found" }), { status: 403 });
-    }
-
     try {
+        const { feedback, username } = await req.json();
+
+        if (!feedback) {
+            return Response.json({ error: "Feedback is required" }, { status: 400 });
+        }
+
         const feedbackResponse = await client.feedback.create({
             data: {
                 feedback: feedback,
+                username: username,
             },
         });
 
-        return new Response(JSON.stringify(feedbackResponse), {
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
+        return Response.json(feedbackResponse);
     } catch (error: any) {
-        return new Response(JSON.stringify({ error: error.message }));
+        console.error("Error creating feedback:", error);
+        return Response.json({ error: error.message }, { status: 500 });
     }
 }
 

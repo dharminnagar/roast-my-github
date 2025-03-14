@@ -52,9 +52,6 @@ export default function Home() {
 
         setRoast("");
         setLoading(true);
-        console.log("Roasting User:", username);
-        console.log("Roast Length:", roastLength);
-        console.log("Roast Intensity:", roastIntensity);
 
         // Call the API to get the roast
         const roastTextFromResponse = await fetch(`/${username}`, {
@@ -106,6 +103,7 @@ export default function Home() {
             const feedbackResponse = await fetch("/feedback", {
                 method: "POST",
                 body: JSON.stringify({
+                    username,
                     feedback,
                 }),
             });
@@ -114,6 +112,7 @@ export default function Home() {
                 const feedbackResponseText = await feedbackResponse.text();
                 console.error("Error submitting feedback:", feedbackResponseText);
                 toast.error("Error submitting feedback");
+                setSubmitLoading(false);
                 return;
             }
 
@@ -183,7 +182,7 @@ export default function Home() {
                                         />
                                     </div>
 
-                                    <Button onClick={handleFeedBack}>
+                                    <Button onClick={handleFeedBack} popoverTargetAction="hide">
                                         {submitLoading && <LoaderCircle className="animate-spin" />}
                                         {submitLoading && <div>Submitting...</div>}
                                         {!submitLoading && "Submit"}
