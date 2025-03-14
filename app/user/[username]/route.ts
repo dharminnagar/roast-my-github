@@ -4,9 +4,12 @@ async function handler(
     req: NextRequest,
     { params }: { params: { username: string } }
 ) {
+    const token = process.env.GITHUB_TOKEN;
     const { username } = await params;
+    console.log(username);
 
     const userDetails = await fetchUserDetails(username);
+    userDetails.contributions = await fetchTotalContributions(token, username);
     userDetails.readme = await fetchUserREADME(username);
 
     return new Response(JSON.stringify(userDetails), {
@@ -51,6 +54,48 @@ async function fetchUserREADME(username: string) {
         const userREADME = decode(userREADMEEncoded);
 
         return userREADME;
+    } catch (error: any) {
+        throw new Error(error.message);
+    }
+}
+
+async function fetchTotalContributions(
+    token: string | undefined,
+    username: string
+) {
+    const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+    };
+
+    const body = {
+        query: `
+            query {
+                user(login: "${username}") {
+                    contributionsCollection {
+                        totalCommitContributions
+                        totalIssueContributions
+                        totalPullRequestContributions
+                        totalPullRequestReviewContributions
+                    }
+                }
+            }
+        `,
+    };
+    try {
+        const ghResponse = await fetch(`https://api.github.com/graphql`, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body),
+        });
+        if (!ghResponse.ok) {
+            throw new Error("Contributions not found");
+        }
+
+        const contributions = await ghResponse.json();
+        const contributionsData =
+            contributions.data.user.contributionsCollection;
+        return contributionsData;
     } catch (error: any) {
         throw new Error(error.message);
     }
