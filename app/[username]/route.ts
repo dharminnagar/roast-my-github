@@ -1,3 +1,5 @@
+import { client } from "../../lib/prisma";
+
 /**
  * A handler for the POST request to get a roast of the user
  * @param req roastLength: number, level: "mild" | "medium" | "extreme"
@@ -30,6 +32,42 @@ async function handler(req: Request, { params }: { params: Promise<{ username: s
             })
         ).text();
 
+        try {
+            const user = await client.user.upsert({
+                where: {
+                    username_roastLevel_roastLength: {
+                        username: username,
+                        roastLevel: level,
+                        roastLength: roastLength,
+                    },
+                },
+                update: {
+                    // Update existing record
+                    roast: roast,
+                },
+                create: {
+                    // Create new record if not exists
+                    username: username,
+                    roastLevel: level,
+                    roastLength: roastLength,
+                    roast: roast,
+                },
+            });
+
+            await client.analytics.update({
+                where: {
+                    id: "1",
+                },
+                data: {
+                    numberOfRoasts: {
+                        increment: 1,
+                    },
+                },
+            });
+        } catch (e: any) {
+            console.log("Error saving roast to database", e.message);
+            return;
+        }
         return new Response(JSON.stringify(roast), {
             headers: {
                 "Content-Type": "application/json",
