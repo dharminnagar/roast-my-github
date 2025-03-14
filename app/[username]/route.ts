@@ -4,10 +4,7 @@
  * @param param1 username: string
  * @returns A roast of the user based on their profile data
  */
-async function handler(
-    req: Request,
-    { params }: { params: Promise<{ username: string }> }
-) {
+async function handler(req: Request, { params }: { params: Promise<{ username: string }> }) {
     const SERVER_URL = process.env.SERVER_URL;
     if (!SERVER_URL) {
         return new Response(JSON.stringify({ error: "Server URL not found" }));
@@ -16,14 +13,10 @@ async function handler(
     const { username } = await params;
     const { roastLength, level = "mild" } = await req.json();
     try {
-        const userDetails = await (
-            await fetch(`${SERVER_URL}/user/${username}`)
-        ).text();
+        const userDetails = await (await fetch(`${SERVER_URL}/user/${username}`)).text();
 
-        if (!userDetails) {
-            return new Response(
-                JSON.stringify({ error: "User Details not found" })
-            );
+        if (JSON.parse(userDetails).error) {
+            return new Response(null);
         }
 
         const roast = await (

@@ -20,7 +20,7 @@ async function handler(req: Request, { params }: { params: Promise<{ username: s
         ? (level as "mild" | "medium" | "extreme")
         : "mild";
 
-    if (!userDetails) {
+    if (userDetails.error) {
         return new Response(JSON.stringify({ error: "User Details not found" }));
     }
 

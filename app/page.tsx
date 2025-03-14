@@ -62,6 +62,14 @@ export default function Home() {
 
         const userRoastText = await roastTextFromResponse.text();
 
+        if (!userRoastText) {
+            toast("Error", {
+                description: "No such User Found",
+            });
+            setLoading(false);
+            return;
+        }
+
         setLoading(false);
         setRoast(userRoastText);
     }
