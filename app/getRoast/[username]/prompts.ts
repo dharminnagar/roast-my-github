@@ -1,7 +1,7 @@
-type roastLevel = "mild" | "medium" | "extreme";
+export type roastLevelTypes = "mild" | "medium" | "extreme";
 
 export function prompts(
-    level: roastLevel,
+    level: roastLevelTypes,
     GITHUB_PROFILE_JSON: string,
     ROAST_LENGTH: number
 ): string {
@@ -17,8 +17,9 @@ Guidelines:
 - Keep the tone playful and good-natured
 - Include at least one joke about their coding skills or repository choices
 - Reference specific elements from their profile (bio, repositories, commit frequency)
-- End on a positive note that acknowledges their potential
 - Avoid mean-spirited jokes or anything that could be genuinely hurtful
+- Don't speak good about the user more than once!
+- Use genz lingo and coding slang to make the roast feel current and relevant
 - Use tech puns and coding jokes where appropriate`,
 
         medium: `You are a skilled comedy roast writer for a developer conference. Create a moderately spicy roast of the GitHub user based on their profile data. The roast should be witty and pointed but still professional enough for a tech audience.
@@ -35,7 +36,9 @@ Guidelines:
 - Reference their commit frequency, follower count, or repository quality
 - Include programming language jokes relevant to their profile
 - Add ironic observations about their bio or readme content
-- Balance the roast with at least one backhanded compliment
+- Don't hold back on clever, cutting jokes
+- Use genz lingo and coding slang to make the roast feel current and relevant
+- Don't speak good about the user event once!
 - Avoid personal attacks or genuinely mean comments`,
 
         extreme: `You are a ruthless tech comedian preparing material for a developer roast battle. Create a spicy, no-holds-barred roast of the GitHub user based on their profile data. The roast should be clever and cutting while remaining focused on their coding habits and GitHub presence - not personal attacks.
@@ -55,7 +58,11 @@ Guidelines:
 - Reference specific data points from their profile to make the roast personalized
 - Include exaggerated (but plausible) assumptions about their development workflow
 - Maintain a focus on professional/technical critique rather than personal attacks
-- End with a twist that's slightly redemptive but still part of the roast`,
+- Don't speak good about the user even once!
+- Use genz lingo and coding slang to make the roast feel current and relevant
+- You can be extremely brutal and cutting. The goal is to give them a reality check in the most dangerous way possible.
+- Avoid personal attacks or genuinely mean comments at all costs
+`,
     };
 
     return prompts[level];
