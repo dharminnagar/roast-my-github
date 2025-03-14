@@ -21,10 +21,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Home() {
     const [roast, setRoast] = useState("");
     const [loading, setLoading] = useState(false);
+    const [feedback, setFeedback] = useState("");
     const [username, setUsername] = useState("");
     const [roastLength, setRoastLength] = useState("Large");
     const [roastIntensity, setRoastIntensity] = useState("Mild");
@@ -89,6 +92,20 @@ export default function Home() {
         }
     };
 
+    const handleFeedBack = () => {
+        if (!feedback) {
+            toast.error("Feedback cannot be empty");
+            return;
+        }
+
+        console.log("Feedback:", feedback);
+
+        // Call the API to submit the feedback
+
+        toast.success("Feedback Submitted Successfully");
+        setFeedback("");
+    };
+
     return (
         <>
             <div>
@@ -124,7 +141,30 @@ export default function Home() {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <Button onClick={handleFeedBack}>FeedBack</Button>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button>FeedBack</Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-80">
+                                <div className="grid gap-4">
+                                    <div className="space-y-2">
+                                        <p className="text-sm text-muted-foreground">
+                                            You can give feedback about the app here
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <Textarea
+                                            placeholder="Enter your feedback here"
+                                            onChange={(e) => {
+                                                setFeedback(e.target.value);
+                                            }}
+                                        />
+                                    </div>
+
+                                    <Button onClick={handleFeedBack}>Submit</Button>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
                     </div>
                 </div>
 
@@ -198,7 +238,3 @@ export default function Home() {
         </>
     );
 }
-
-const handleFeedBack = () => {
-    alert("This feature is not available yet");
-};
