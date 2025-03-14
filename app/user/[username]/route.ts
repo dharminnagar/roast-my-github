@@ -8,9 +8,10 @@ async function handler(
     const { username } = await params;
     console.log(username);
 
-    const userDetails = await fetchUserDetails(username);
+    const userDetails = await fetchUserDetails(token, username);
     userDetails.contributions = await fetchTotalContributions(token, username);
-    userDetails.readme = await fetchUserREADME(username);
+    userDetails.readme = await fetchUserREADME(token, username);
+    userDetails.repos = await fetchGitHubRepos(token, username);
 
     return new Response(JSON.stringify(userDetails), {
         headers: {
@@ -19,10 +20,15 @@ async function handler(
     });
 }
 
-async function fetchUserDetails(username: string) {
+async function fetchUserDetails(token: string | undefined, username: string) {
     try {
         const ghResponse = await fetch(
-            `https://api.github.com/users/${username}`
+            `https://api.github.com/users/${username}`,
+            {
+                headers: {
+                    Authorization: `token ${token}`,
+                },
+            }
         );
         if (!ghResponse.ok) {
             throw new Error("User not found");
@@ -36,10 +42,14 @@ async function fetchUserDetails(username: string) {
     }
 }
 
-async function fetchUserREADME(username: string) {
+async function fetchUserREADME(token: string | undefined, username: string) {
     try {
         const url = `https://api.github.com/repos/${username}/${username}/contents/README.md`;
-        const ghResponse = await fetch(url);
+        const ghResponse = await fetch(url, {
+            headers: {
+                Authorization: `token ${token}`,
+            },
+        });
         if (!ghResponse.ok) {
             throw new Error("README not Found");
         }
@@ -99,6 +109,25 @@ async function fetchTotalContributions(
     } catch (error: any) {
         throw new Error(error.message);
     }
+}
+
+async function fetchGitHubRepos(token: string | undefined, username: string) {
+    const ghResponse = await fetch(
+        `https://api.github.com/users/${username}/repos?per_page=100`,
+        {
+            headers: {
+                Authorization: `token ${token}`,
+            },
+        }
+    );
+    if (!ghResponse.ok) {
+        throw new Error(
+            `GitHub repos fetch failed with status ${ghResponse.status}`
+        );
+    }
+
+    const repos = await ghResponse.json();
+    return repos;
 }
 
 export { handler as GET };
