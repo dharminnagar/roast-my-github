@@ -27,6 +27,7 @@ import { Textarea } from "@/components/ui/textarea";
 export default function Home() {
     const [roast, setRoast] = useState("");
     const [loading, setLoading] = useState(false);
+    const [submitLoading, setSubmitLoading] = useState(false);
     const [feedback, setFeedback] = useState("");
     const [username, setUsername] = useState("");
     const [roastLength, setRoastLength] = useState("Large");
@@ -98,7 +99,7 @@ export default function Home() {
             return;
         }
 
-        console.log("Feedback:", feedback);
+        setSubmitLoading(true);
 
         // Call the API to submit the feedback
         try {
@@ -118,9 +119,11 @@ export default function Home() {
 
             toast.success("Feedback Submitted Successfully");
             setFeedback("");
+            setSubmitLoading(false);
         } catch (e: any) {
             console.error("Error submitting feedback:", e);
             toast.error("Error submitting feedback");
+            setSubmitLoading(false);
             return;
         }
     }
@@ -180,7 +183,11 @@ export default function Home() {
                                         />
                                     </div>
 
-                                    <Button onClick={handleFeedBack}>Submit</Button>
+                                    <Button onClick={handleFeedBack}>
+                                        {submitLoading && <LoaderCircle className="animate-spin" />}
+                                        {submitLoading && <div>Submitting...</div>}
+                                        {!submitLoading && "Submit"}
+                                    </Button>
                                 </div>
                             </PopoverContent>
                         </Popover>
