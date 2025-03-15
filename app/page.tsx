@@ -11,7 +11,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Github, LoaderCircle, Moon, Sun } from "lucide-react";
+import { Github, LoaderCircle, Moon, Share, Sun } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { GitHubIconDark, GitHubIconLight, XIconDark, XIconLight } from "@/lib/icons";
+import { getTweetEndings } from "@/lib/tweetEndings";
 
 export default function Home() {
     const [roast, setRoast] = useState("");
@@ -32,7 +34,7 @@ export default function Home() {
     const [username, setUsername] = useState("");
     const [roastLength, setRoastLength] = useState("Large");
     const [roastIntensity, setRoastIntensity] = useState("Mild");
-    const { setTheme } = useTheme();
+    const { resolvedTheme, setTheme } = useTheme();
 
     async function handleRoast() {
         if (!username) {
@@ -127,6 +129,13 @@ export default function Home() {
         }
     }
 
+    function handleShare() {
+        const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+            `${roast.slice(0, 150)}...\n\n${getTweetEndings(roastIntensity)}`
+        )}`;
+        window.open(url, "_blank");
+    }
+
     return (
         <>
             <div>
@@ -138,7 +147,7 @@ export default function Home() {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            <Github />
+                            {resolvedTheme === "dark" ? <GitHubIconLight /> : <GitHubIconDark />}
                         </a>
 
                         {/* Dropdown Menu for Theme */}
@@ -235,11 +244,19 @@ export default function Home() {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <Button className="w-32" onClick={handleRoast}>
-                            {loading && <LoaderCircle className="animate-spin" />}
-                            {loading && <div>Roasting...</div>}
-                            {!loading && "Roast Me"}
-                        </Button>
+                        <div className="flex gap-4">
+                            <Button className="w-32" onClick={handleRoast}>
+                                {loading && <LoaderCircle className="animate-spin" />}
+                                {loading && <div>Roasting...</div>}
+                                {!loading && "Roast Me"}
+                            </Button>
+                            {roast && (
+                                <Button className="w-32" onClick={handleShare}>
+                                    {resolvedTheme === "dark" ? <XIconDark /> : <XIconLight />}
+                                    Share
+                                </Button>
+                            )}
+                        </div>
                     </div>
 
                     <div className="roast pt-5 flex justify-center">

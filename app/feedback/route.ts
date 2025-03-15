@@ -1,6 +1,6 @@
 import { client } from "../../lib/prisma";
 
-async function handler(req: Request, res: Response) {
+async function handler(req: Request) {
     try {
         const { feedback, username } = await req.json();
 
