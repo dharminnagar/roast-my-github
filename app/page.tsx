@@ -11,7 +11,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Github, LoaderCircle, Moon, Share, Sun } from "lucide-react";
+import { LoaderCircle, Moon, Sun } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
@@ -25,6 +25,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Textarea } from "@/components/ui/textarea";
 import { GitHubIconDark, GitHubIconLight, XIconDark, XIconLight } from "@/lib/icons";
 import { getTweetEndings } from "@/lib/tweetEndings";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Home() {
     const [roast, setRoast] = useState("");
@@ -143,26 +144,35 @@ export default function Home() {
                 <div className="navbar flex justify-between items-center px-5 h-[8vh] border border-b-gray-200">
                     <div className="font-bold text-xl">Roast-My-GitHub</div>
                     <div className="flex gap-4 items-center">
-                        <a
-                            href="https://github.com/dharminnagar/roast-my-github"
-                            target="_blank"
-                            rel="noreferrer"
-                        >
-                            <div className="hidden">
-                                {theme} {systemTheme}
-                            </div>
-                            {theme === "system" ? (
-                                systemTheme === "dark" ? (
-                                    <GitHubIconLight />
-                                ) : (
-                                    <GitHubIconDark />
-                                )
-                            ) : theme === "dark" ? (
-                                <GitHubIconLight />
-                            ) : (
-                                <GitHubIconDark />
-                            )}
-                        </a>
+                        <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <a
+                                        href="https://github.com/dharminnagar/roast-my-github"
+                                        target="_blank"
+                                        rel="noreferrer"
+                                    >
+                                        <div className="hidden">
+                                            {theme} {systemTheme}
+                                        </div>
+                                        {theme === "system" ? (
+                                            systemTheme === "dark" ? (
+                                                <GitHubIconLight />
+                                            ) : (
+                                                <GitHubIconDark />
+                                            )
+                                        ) : theme === "dark" ? (
+                                            <GitHubIconLight />
+                                        ) : (
+                                            <GitHubIconDark />
+                                        )}
+                                    </a>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>@dharminnagar</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
 
                         {/* Dropdown Menu for Theme */}
                         <DropdownMenu>
