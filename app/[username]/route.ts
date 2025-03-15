@@ -15,6 +15,30 @@ async function handler(req: Request, { params }: { params: Promise<{ username: s
     const { username } = await params;
     const { roastLength, level = "mild" } = await req.json();
     try {
+        const roast = await client.user.findUnique({
+            where: {
+                username_roastLevel_roastLength: {
+                    username: username,
+                    roastLevel: level,
+                    roastLength: roastLength,
+                },
+            },
+        });
+
+        console.log("Roast found in the database");
+
+        if (roast) {
+            return new Response(JSON.stringify(roast.roast), {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+        }
+    } catch (e: any) {
+        console.log("Roast not found in the database. Creating one...", e.message);
+    }
+
+    try {
         const userDetails = await (await fetch(`${SERVER_URL}/user/${username}`)).text();
 
         if (JSON.parse(userDetails).error) {
