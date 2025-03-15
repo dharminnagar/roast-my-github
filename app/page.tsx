@@ -34,7 +34,7 @@ export default function Home() {
     const [username, setUsername] = useState("");
     const [roastLength, setRoastLength] = useState("Large");
     const [roastIntensity, setRoastIntensity] = useState("Mild");
-    const { resolvedTheme, setTheme } = useTheme();
+    const { theme, systemTheme, setTheme } = useTheme();
 
     async function handleRoast(getFromDatabase: boolean) {
         if (!username) {
@@ -148,7 +148,20 @@ export default function Home() {
                             target="_blank"
                             rel="noreferrer"
                         >
-                            {resolvedTheme === "dark" ? <GitHubIconLight /> : <GitHubIconDark />}
+                            <div className="hidden">
+                                {theme} {systemTheme}
+                            </div>
+                            {theme === "system" ? (
+                                systemTheme === "dark" ? (
+                                    <GitHubIconLight />
+                                ) : (
+                                    <GitHubIconDark />
+                                )
+                            ) : theme === "dark" ? (
+                                <GitHubIconLight />
+                            ) : (
+                                <GitHubIconDark />
+                            )}
                         </a>
 
                         {/* Dropdown Menu for Theme */}
@@ -260,12 +273,22 @@ export default function Home() {
                                     {!loading && `New Roast`}
                                 </Button>
                             )}
-                            {roast && (
-                                <Button className="w-32" onClick={handleShare}>
-                                    {resolvedTheme === "dark" ? <XIconDark /> : <XIconLight />}
-                                    Share
-                                </Button>
-                            )}
+                            {/* {roast && ( */}
+                            <Button className="w-32" onClick={handleShare}>
+                                {theme === "system" ? (
+                                    systemTheme === "dark" ? (
+                                        <XIconDark />
+                                    ) : (
+                                        <XIconLight />
+                                    )
+                                ) : theme === "dark" ? (
+                                    <XIconDark />
+                                ) : (
+                                    <XIconLight />
+                                )}
+                                Share
+                            </Button>
+                            {/* )} */}
                         </div>
                     </div>
 
