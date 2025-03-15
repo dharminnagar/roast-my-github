@@ -217,8 +217,12 @@ export default function Home() {
                 </div>
 
                 <div className="h-[92vh] pt-5">
-                    <div className="flex justify-center text-lg">
-                        Get a Roast of your GitHub profile based on your activity and contributions
+                    <div className="flex flex-col items-center justify-center text-lg">
+                        <div>
+                            Get a <span className="font-bold italic">"Genz"</span> Roast of your
+                            GitHub profile based on, ugh, you know 😏{" "}
+                        </div>
+                        <div>Brace yourself—your GitHub is about to get judged. No cap.</div>
                     </div>
                     <div className="flex flex-col items-center justify-center gap-4 mt-5">
                         <Input
@@ -273,22 +277,22 @@ export default function Home() {
                                     {!loading && `New Roast`}
                                 </Button>
                             )}
-                            {/* {roast && ( */}
-                            <Button className="w-32" onClick={handleShare}>
-                                {theme === "system" ? (
-                                    systemTheme === "dark" ? (
+                            {roast && (
+                                <Button className="w-32" onClick={handleShare}>
+                                    {theme === "system" ? (
+                                        systemTheme === "dark" ? (
+                                            <XIconDark />
+                                        ) : (
+                                            <XIconLight />
+                                        )
+                                    ) : theme === "dark" ? (
                                         <XIconDark />
                                     ) : (
                                         <XIconLight />
-                                    )
-                                ) : theme === "dark" ? (
-                                    <XIconDark />
-                                ) : (
-                                    <XIconLight />
-                                )}
-                                Share
-                            </Button>
-                            {/* )} */}
+                                    )}
+                                    Share
+                                </Button>
+                            )}
                         </div>
                     </div>
 
