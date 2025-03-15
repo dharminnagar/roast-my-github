@@ -36,7 +36,7 @@ export default function Home() {
     const [roastIntensity, setRoastIntensity] = useState("Mild");
     const { resolvedTheme, setTheme } = useTheme();
 
-    async function handleRoast() {
+    async function handleRoast(getFromDatabase: boolean) {
         if (!username) {
             toast.error("Username cannot be empty");
             return;
@@ -59,6 +59,7 @@ export default function Home() {
         const roastTextFromResponse = await fetch(`/${username}`, {
             method: "POST",
             body: JSON.stringify({
+                getFromDatabase: getFromDatabase,
                 roastLength,
                 level: roastIntensity,
             }),
@@ -245,11 +246,20 @@ export default function Home() {
                             </Select>
                         </div>
                         <div className="flex gap-4">
-                            <Button className="w-32" onClick={handleRoast}>
-                                {loading && <LoaderCircle className="animate-spin" />}
-                                {loading && <div>Roasting...</div>}
-                                {!loading && "Roast Me"}
-                            </Button>
+                            {!roast && (
+                                <Button className="w-32" onClick={() => handleRoast(false)}>
+                                    {loading && <LoaderCircle className="animate-spin" />}
+                                    {loading && <div>Roasting...</div>}
+                                    {!loading && "Roast Me"}
+                                </Button>
+                            )}
+                            {roast && (
+                                <Button className="w-32" onClick={() => handleRoast(false)}>
+                                    {loading && <LoaderCircle className="animate-spin" />}
+                                    {loading && <div>Roasting...</div>}
+                                    {!loading && `New Roast`}
+                                </Button>
+                            )}
                             {roast && (
                                 <Button className="w-32" onClick={handleShare}>
                                     {resolvedTheme === "dark" ? <XIconDark /> : <XIconLight />}
