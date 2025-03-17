@@ -11,7 +11,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LoaderCircle, Moon, Sun } from "lucide-react";
+import { Info, LoaderCircle, Moon, Sun } from "lucide-react";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { useTheme } from "next-themes";
@@ -272,6 +272,19 @@ export default function Home() {
                                 </SelectContent>
                             </Select>
                         </div>
+
+                        <div>
+                            {roastIntensity === "extreme" && (
+                                <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                    <Info className="h-4 w-4 inline-block" />
+                                    <p>
+                                        You've select <span className="font-bold">Extreme</span>:
+                                        Proceed with caution! 🚨
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+
                         <div className="flex gap-4">
                             {!roast && (
                                 <Button className="w-32" onClick={() => handleRoast(false)}>
