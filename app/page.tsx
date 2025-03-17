@@ -273,17 +273,15 @@ export default function Home() {
                             </Select>
                         </div>
 
-                        <div>
-                            {roastIntensity === "extreme" && (
-                                <div className="text-sm text-muted-foreground flex items-center gap-2">
-                                    <Info className="h-4 w-4 inline-block" />
-                                    <p>
-                                        You've select <span className="font-bold">Extreme</span>:
-                                        Proceed with caution! 🚨
-                                    </p>
-                                </div>
-                            )}
-                        </div>
+                        {roastIntensity === "extreme" && (
+                            <div className="text-sm text-muted-foreground flex items-center gap-2">
+                                <Info className="h-4 w-4 inline-block" />
+                                <p>
+                                    You've select <span className="font-bold">Extreme</span>:
+                                    Proceed with caution! 🚨
+                                </p>
+                            </div>
+                        )}
 
                         <div className="flex gap-4">
                             {!roast && (
